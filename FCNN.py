@@ -33,9 +33,20 @@ class NeuralNetwork:
         self.round_trip = round_trip
         self.gradient = []
 
+    
+    def __neural_count(self, array):
+        tab = []
+        tot = self.nbr_input
+        for i in array:
+            tab.append(tot + i)
+            tot = i
+        tab.append(tot + len(self.expected_output[0]))
+        return (tab)
+
+
     def __create_array_matrix(self, array):
         tmp = len(self.neural_matrix[0][0]) - 1
-        temp = [425,35]
+        temp = self.__neural_count(array)
         for i in range(len(array)):
             max_min = np.sqrt(6 / temp[i]) 
             matrix = np.float32(np.random.uniform(-max_min, max_min, (tmp + 1, array[i]))) 
