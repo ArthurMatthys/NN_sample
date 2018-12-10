@@ -25,7 +25,7 @@ class NeuralNetwork:
         self.__create_ones()
         self.array_matrix = []
         if (load_matrix):
-            self.array_matrix = np.load("thetas1.npy")
+            self.array_matrix = np.load("layers.npy")
         else:
             self.__create_array_matrix(array_size_layer)
         self.nbr_layers = len(self.array_matrix)
@@ -101,20 +101,20 @@ class NeuralNetwork:
         for i in range(self.nbr_layers)[::-1]:
             matrix_weight = self.array_matrix[i].copy()
             matrix_weight[:,-1] = 0
-            grad = np.dot(np.transpose(self.neural_matrix[i]), np.multiply(middle_part, (1 / self.nbr_input)))
-            grad += np.multiply(regularisation, matrix_weight)
+            grad = np.dot(np.transpose(self.neural_matrix[i]), middle_part * (1 / self.nbr_input))
+            grad += regularisation * matrix_weight
             self.gradient.append(grad)
             actual_layer = self.neural_matrix[i][:,:-1].copy()
             actual_layer-= np.square(actual_layer)
             cropped_transpose = np.transpose(self.array_matrix[i][:-1])
-            middle_part = np.multiply(actual_layer, np.dot(middle_part, cropped_transpose))
+            middle_part = actual_layer * np.dot(middle_part, cropped_transpose)
 
  
     def apply_gradient(self):
         for i in range(self.nbr_layers):
             grad = self.gradient[self.nbr_layers - i - 1]
             alpha = 1
-            self.array_matrix[i] -= (np.multiply(alpha, grad))
+            self.array_matrix[i] -= alpha * grad
 
 
     def run_network(self):
@@ -150,7 +150,7 @@ output = np.zeros([5000, 10])
 for i in range(len(output)):
     output[i][i//500] = 1
 
-#stat = 1
+stat = 0
 #b = 0
 #for b in range(501):
 #    test = []
@@ -169,7 +169,7 @@ for i in range(len(output)):
 
 
 
-network = NeuralNetwork(a, [25], output, int(sys.argv[1]) if len(sys.argv) > 2 else 5, float(sys.argv[2]) if len(sys.argv) > 2 else 0.1, 0, 0)
+network = NeuralNetwork(a, [25], output, int(sys.argv[1]) if len(sys.argv) > 2 else 5, float(sys.argv[2]) if len(sys.argv) > 2 else 0.1, 1, 1)
 
 
 network.run_network()
