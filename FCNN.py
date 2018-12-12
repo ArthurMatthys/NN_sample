@@ -69,7 +69,7 @@ class NeuralNetwork:
 
     def forward_propagation(self):
         for i in range(self.nbr_layers):
-            new_matrix = 1 / (1 + np.exp(-np.dot(self.neural_matrix[i], self.array_matrix[i])))
+            new_matrix = 1 / (1 + np.exp(-np.clip(np.dot(self.neural_matrix[i], self.array_matrix[i]),-50, 50)))
             self.neural_matrix.append(np.hstack((new_matrix, self.matrix_ones)))
 
 
@@ -144,11 +144,11 @@ class NeuralNetwork:
                 tot += 1
         return (tot / len(input_test))
 
-a = np.load("dataset.npy")
+a = np.load("training_set.npy")
 
-output = np.zeros([5000, 10])
+output = np.zeros([60000, 10])
 for i in range(len(output)):
-    output[i][i//500] = 1
+    output[i][i//6000] = 1
 
 stat = 0
 #b = 0

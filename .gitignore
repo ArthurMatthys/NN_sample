@@ -1,3 +1,4 @@
 *.npy
+*.swo
 *.swp
 renoM.py
